@@ -417,14 +417,15 @@ export async function addAttendee(attendee: Omit<Attendee, "id" | "createdAt">):
     const subject = `🎉 ยืนยันการลงทะเบียนเข้าร่วมงานมหกรรมเมืองสมุนไพรจังหวัดสตูล 2569`;
     const body = `เรียน คุณ ${attendee.name},\n\nระบบได้รับการยืนยันการลงทะเบียนเข้าร่วมงาน "มหกรรมเมืองสมุนไพรจังหวัดสตูล 2569" (Satun Herbal City 2026) สำเร็จเรียบร้อยแล้ว!\n\n📅 วันจัดงาน: 16 - 17 กรกฎาคม 2569\n📍 สถานที่: ศูนย์บริการนักท่องเที่ยว Satun Geopark Gateway อำเภอควนโดน จังหวัดสตูล\n\n🔖 ประเภทผู้เข้าร่วม: ${attendee.type}\n🏢 สังกัด/หน่วยงาน: ${attendee.organization || "-"}\n⏰ เวลาที่ลงทะเบียน: วันที่ ${attendee.regDate} เวลา ${attendee.regTime} น.\n\nกรุณาใช้หน้าจอนี้หรือตรวจสอบรหัสยืนยันในอีเมลของท่านเมื่อเช็คอินเข้างาน\n[รหัสอ้างอิง: REG-${docRef.id.substring(0, 8).toUpperCase()}]\n\nขอแสดงความนับถือ,\nกลุ่มงานการแพทย์แผนไทยและการแพทย์ทางเลือก สำนักงานสาธารณสุขจังหวัดสตูล\nโทรศัพท์: 0 ๗๔๗๑ ๑๐๗๓`;
     
+    const hasEmail = attendee.email && attendee.email !== "-";
     const emailLog: Omit<EmailLog, "id"> = {
       attendeeId: docRef.id,
       recipientName: attendee.name,
-      recipientEmail: attendee.email,
+      recipientEmail: hasEmail ? attendee.email : "ไม่ได้ระบุอีเมล",
       subject,
       body,
       sentAt: new Date().toISOString(),
-      status: "ส่งสำเร็จ (Delivered)"
+      status: hasEmail ? "ส่งสำเร็จ (Delivered)" : "บันทึกข้อมูลออฟไลน์ (ไม่มีอีเมล)"
     };
     await addDoc(collection(db, EMAILS_COL), emailLog);
 

@@ -48,8 +48,8 @@ export default function RegistrationView({ attendees, onRefresh }: RegistrationV
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !phone || !email) {
-      alert("กรุณากรอกข้อมูลที่จำเป็น (ชื่อ, เบอร์โทรศัพท์, อีเมล) ให้ครบถ้วน");
+    if (!name || !phone) {
+      alert("กรุณากรอกข้อมูลที่จำเป็น (ชื่อ, เบอร์โทรศัพท์) ให้ครบถ้วน");
       return;
     }
 
@@ -58,7 +58,7 @@ export default function RegistrationView({ attendees, onRefresh }: RegistrationV
       const data = {
         name,
         phone,
-        email,
+        email: email.trim() || "-",
         type,
         organization: organization || "-",
         regDate,
@@ -227,7 +227,7 @@ export default function RegistrationView({ attendees, onRefresh }: RegistrationV
 
           {/* Email */}
           <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-600 block">อีเมลสำหรับรับแจ้งเตือน <span className="text-rose-500">*</span></label>
+            <label className="text-xs font-semibold text-slate-600 block">อีเมลสำหรับรับแจ้งเตือน <span className="text-slate-400 font-normal">(ไม่บังคับ - กรอกหรือข้ามก็ได้)</span></label>
             <div className="relative">
               <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
                 <Mail className="w-4 h-4" />
@@ -236,12 +236,11 @@ export default function RegistrationView({ attendees, onRefresh }: RegistrationV
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="เช่น piya@gmail.com"
+                placeholder="เช่น piya@gmail.com (ข้ามได้)"
                 className="w-full pl-9 pr-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 outline-hidden transition"
-                required
               />
             </div>
-            <p className="text-[10px] text-emerald-700 mt-1">📧 ระบบจะทำการส่งอีเมลแจ้งเตือนสำเร็จและรหัสผู้เข้างานแบบจำลองทันที</p>
+            <p className="text-[10px] text-emerald-700 mt-1">📧 หากระบุ ระบบจะส่งเมลแจ้งเตือนสำเร็จและรหัสผู้เข้างานทันที</p>
           </div>
 
           {/* Type of Attendee */}
@@ -303,7 +302,7 @@ export default function RegistrationView({ attendees, onRefresh }: RegistrationV
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 text-white font-semibold py-2.5 rounded-xl text-sm shadow-sm transition mt-2 flex items-center justify-center gap-2"
+            className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 text-white font-semibold py-2.5 rounded-xl text-sm shadow-sm transition mt-2 flex items-center justify-center gap-2 cursor-pointer"
           >
             {isSubmitting ? (
               <>กำลังบันทึกข้อมูล...</>

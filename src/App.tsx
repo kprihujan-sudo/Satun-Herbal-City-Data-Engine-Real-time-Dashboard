@@ -64,9 +64,9 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
+    <div className="min-h-screen bg-slate-50 flex flex-col lg:flex-row font-sans">
       
-      {/* Top Header Section */}
+      {/* Sidebar Navigation */}
       <Header 
         onRefresh={() => fetchAllData(true)} 
         activeTab={activeTab} 
@@ -75,81 +75,83 @@ export default function App() {
         setIsSeeding={setIsSeeding}
       />
 
-      {/* Main Content Stage */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
-        
-        {isLoading ? (
-          <div className="py-32 flex flex-col items-center justify-center gap-4">
-            <div className="relative">
-              <Loader2 className="w-10 h-10 animate-spin text-emerald-600" />
-              <Leaf className="w-5 h-5 text-emerald-500 absolute inset-0 m-auto animate-pulse" />
+      {/* Main Content Stage (with left padding on desktop to clear fixed sidebar) */}
+      <div className="flex-1 flex flex-col lg:pl-72 min-w-0">
+        <main className="flex-1 w-full p-4 sm:p-6 lg:p-8">
+          
+          {isLoading ? (
+            <div className="py-32 flex flex-col items-center justify-center gap-4">
+              <div className="relative">
+                <Loader2 className="w-10 h-10 animate-spin text-emerald-600" />
+                <Leaf className="w-5 h-5 text-emerald-500 absolute inset-0 m-auto animate-pulse" />
+              </div>
+              <div className="text-center">
+                <p className="text-sm font-semibold text-slate-700">กำลังดาวน์โหลดข้อมูลเรียลไทม์...</p>
+                <p className="text-xs text-slate-400 mt-1">กรุณารอการเชื่อมต่อและดึงสถิติจากระบบฐานข้อมูลสักครู่</p>
+              </div>
             </div>
-            <div className="text-center">
-              <p className="text-sm font-semibold text-slate-700">กำลังดาวน์โหลดข้อมูลเรียลไทม์...</p>
-              <p className="text-xs text-slate-400 mt-1">กรุณารอการเชื่อมต่อและดึงสถิติจากระบบฐานข้อมูลสักครู่</p>
+          ) : (
+            <div className="space-y-6">
+              
+              {/* Active Rendered tab */}
+              {activeTab === "dashboard" && (
+                <DashboardView 
+                  attendees={attendees} 
+                  transactions={transactions} 
+                  negotiations={negotiations}
+                  setActiveTab={setActiveTab}
+                />
+              )}
+
+              {activeTab === "registration" && (
+                <RegistrationView 
+                  attendees={attendees} 
+                  onRefresh={() => fetchAllData(true)} 
+                />
+              )}
+
+              {activeTab === "sales" && (
+                <SalesView 
+                  transactions={transactions} 
+                  onRefresh={() => fetchAllData(true)} 
+                />
+              )}
+
+              {activeTab === "negotiation" && (
+                <NegotiationView 
+                  negotiations={negotiations} 
+                  onRefresh={() => fetchAllData(true)} 
+                />
+              )}
+
+              {activeTab === "notifications" && (
+                <NotificationInbox 
+                  emailLogs={emailLogs} 
+                  onRefresh={() => fetchAllData(true)} 
+                />
+              )}
+
+            </div>
+          )}
+
+        </main>
+
+        {/* Bottom Footer Section inside content container */}
+        <footer className="bg-white border-t border-slate-100 py-6 mt-12">
+          <div className="w-full px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-400">
+            <div className="flex items-center gap-2">
+              <Leaf className="w-4 h-4 text-emerald-600" />
+              <span className="font-semibold text-slate-600">งานมหกรรมเมืองสมุนไพรจังหวัดสตูล ๒๕๖๙</span>
+            </div>
+            <div>
+              พัฒนาโดย กลุ่มงานการแพทย์แผนไทยและการแพทย์ทางเลือก สำนักงานสาธารณสุขจังหวัดสตูล
+            </div>
+            <div className="font-mono text-[10px]">
+              v1.0.0 (Satun Geopark Gateway)
             </div>
           </div>
-        ) : (
-          <div className="space-y-6">
-            
-            {/* Active Rendered tab */}
-            {activeTab === "dashboard" && (
-              <DashboardView 
-                attendees={attendees} 
-                transactions={transactions} 
-                negotiations={negotiations}
-                setActiveTab={setActiveTab}
-              />
-            )}
-
-            {activeTab === "registration" && (
-              <RegistrationView 
-                attendees={attendees} 
-                onRefresh={() => fetchAllData(true)} 
-              />
-            )}
-
-            {activeTab === "sales" && (
-              <SalesView 
-                transactions={transactions} 
-                onRefresh={() => fetchAllData(true)} 
-              />
-            )}
-
-            {activeTab === "negotiation" && (
-              <NegotiationView 
-                negotiations={negotiations} 
-                onRefresh={() => fetchAllData(true)} 
-              />
-            )}
-
-            {activeTab === "notifications" && (
-              <NotificationInbox 
-                emailLogs={emailLogs} 
-                onRefresh={() => fetchAllData(true)} 
-              />
-            )}
-
-          </div>
-        )}
-
-      </main>
-
-      {/* Bottom Footer Section */}
-      <footer className="bg-white border-t border-slate-100 py-6 mt-12">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-400">
-          <div className="flex items-center gap-2">
-            <Leaf className="w-4 h-4 text-emerald-600" />
-            <span className="font-semibold text-slate-600">งานมหกรรมเมืองสมุนไพรจังหวัดสตูล ๒๕๖๙</span>
-          </div>
-          <div>
-            พัฒนาโดย กลุ่มงานการแพทย์แผนไทยและการแพทย์ทางเลือก สำนักงานสาธารณสุขจังหวัดสตูล
-          </div>
-          <div className="font-mono text-[10px]">
-            v1.0.0 (Satun Geopark Gateway)
-          </div>
-        </div>
-      </footer>
+        </footer>
+      </div>
 
     </div>
   );

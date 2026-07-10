@@ -108,8 +108,12 @@ export default function NotificationInbox({ emailLogs, onRefresh }: Notification
                 </div>
 
                 <div className="flex items-center gap-3 shrink-0">
-                  <span className="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded text-[9px]">
-                    DELIVERED
+                  <span className={`font-bold px-2 py-0.5 rounded text-[9px] ${
+                    email.status.includes("ส่งสำเร็จ")
+                      ? "bg-emerald-100 text-emerald-800"
+                      : "bg-slate-100 text-slate-600"
+                  }`}>
+                    {email.status.includes("ส่งสำเร็จ") ? "DELIVERED" : "OFFLINE"}
                   </span>
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </div>
@@ -137,7 +141,7 @@ export default function NotificationInbox({ emailLogs, onRefresh }: Notification
               <div className="space-y-1 border-b border-slate-200/60 pb-2 text-slate-500">
                 <div><strong>ผู้ส่ง:</strong> info@satunherbalcity.com</div>
                 <div><strong>ผู้รับ:</strong> {selectedEmail.recipientName} &lt;{selectedEmail.recipientEmail}&gt;</div>
-                <div><strong>สถานะส่ง:</strong> <span className="text-emerald-600 font-bold">ส่งสำเร็จ (Delivered)</span></div>
+                <div><strong>สถานะส่ง:</strong> <span className={selectedEmail.status.includes("ส่งสำเร็จ") ? "text-emerald-600 font-bold" : "text-slate-500 font-bold"}>{selectedEmail.status}</span></div>
               </div>
 
               <div className="text-slate-700 space-y-2 whitespace-pre-line leading-relaxed text-[11px] font-sans">
